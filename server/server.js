@@ -10,7 +10,9 @@ app.use(cors())
 app.use(express.json()); 
 
 mongoose.connect(process.env.MONGO_URL);
-
+app.get('/',(req,res)=>{
+  res.send('Hello, word')
+})
 app.post('/store-text', async (req, res, next) => {
   const textData = new TextModel({
     inputText: req.body.inputText,
