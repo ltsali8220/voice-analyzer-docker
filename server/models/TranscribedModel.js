@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+// Define a schema
+const mongoose = require("mongoose");
 
 const TextSchema = new mongoose.Schema({
     inputText: String,
@@ -7,4 +8,4 @@ const TextSchema = new mongoose.Schema({
     uniqueWords: [String]
   });
 
-export default mongoose.model("Text", TextSchema)
+module.exports = mongoose.model("Text", TextSchema)
