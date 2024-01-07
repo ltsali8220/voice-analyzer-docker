@@ -1,9 +1,10 @@
-const express = require('express');
+import mongoose from 'mongoose';
+import express from 'express'
+import dotenv from 'dotenv'
+import cors from 'cors'
+import TextModel from "./models/TranscribedModel.js"
 const app = express();
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const TextModel  = require('./models/TranscribedModel');
-const cors = require('cors')
+
 dotenv.config();
 
 app.use(cors())
