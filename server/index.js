@@ -28,4 +28,4 @@ app.get('/store-text', async (req, res) => {
   res.send(texts)
 })
 
-app.listen(3001, () => console.log('Server is running on port 3001'));    
+app.listen(9000, () => console.log('Server is running'));    
