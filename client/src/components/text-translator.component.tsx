@@ -9,20 +9,34 @@ const TextTranslator = ({ inputLanguage, inputText, data, setData }: any) => {
   const [outputText, setoutputText] = useState<string>('');
   const uniquePhrase = getTop3UniquePhrases(outputText);
   const frequencyWord = getFrequencyWord(outputText);
+  console.log(inputText);
 
   useEffect(() => {
     function TranslatedText() {
-      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${inputLanguage}&tl=en-US&dt=t&q=${encodeURI(
-        inputText,
-      )}`;
+      const maxChunkLength = 1000; // Define the maximum length of each chunk
 
-      fetch(url)
-        .then((response) => response.json())
-        .then((json) => {
-          setoutputText(json[0].map((item: any) => item[0]).join(''));
+      // Split the input text into chunks
+      const textChunks = [];
+      for (let i = 0; i < inputText.length; i += maxChunkLength) {
+        textChunks.push(inputText.substr(i, maxChunkLength));
+      }
+
+      // Translate each chunk and store promises in an array
+      const translationPromises = textChunks.map(chunk => {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${inputLanguage}&tl=en-US&dt=t&q=${encodeURI(chunk)}`;
+
+        return fetch(url)
+          .then(response => response.json())
+          .then(json => json[0].map((item:any) => item[0]).join(''));
+      });
+      
+      Promise.all(translationPromises)
+        .then(translations => {
+          const translatedText = translations.join(' ');
+          setoutputText(translatedText);
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(error => {
+          console.error("Translation error:", error);
         });
     }
     TranslatedText();

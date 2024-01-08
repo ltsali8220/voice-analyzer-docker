@@ -14,7 +14,7 @@ const HistoryTable = ({ data }: any) => {
               <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
                 Sn.No.
               </th>
-              <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
+              <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg text-clip'>
                 Input Text
               </th>
               <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
@@ -40,7 +40,7 @@ const HistoryTable = ({ data }: any) => {
                   </th>
                   <th
                     scope='row'
-                    className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center text-sm'
+                    className='px-6 py-4 font-medium text-gray-900 text-center text-sm'
                   >
                     {item.inputText}
                   </th>
