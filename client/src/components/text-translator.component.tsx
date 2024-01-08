@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import HistoryTable from './transcribed-data.component';
+import HistoryTable from './history-table.component';
 import { getFrequencyWord, getTop3UniquePhrases } from '@/utils';
 import { saveTranscribeData } from '@/services/api.serivces';
 
