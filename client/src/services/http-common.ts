@@ -1,5 +1,5 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://kyro-voice-analyzer-api.onrender.com';
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 export default axios;
