@@ -81,3 +81,38 @@ Voice Analyzer is designed to take audio input from the user, and translate it i
    - Analyzes the speech input to identify unique phrases or sentences spoken by the user.
    - Displays a list of the top 3 unique phrases detected.
 
+## Supported Platforms
+
+The Voice Analyzer App is compatible with the following web browsers and platforms:
+
+### Desktop Browsers:
+- Google Chrome
+- Microsoft Edge
+- Opera
+
+### Mobile Browsers:
+- Safari (iOS)
+- Chrome (Android)
+- Opera (Android)
+- Samsung Internet
+- WebView (Android)
+
+## Usage Instructions
+
+1. **Accessing the App:** Make sure you're using one of the supported browsers mentioned above.
+2. **Recording Voice:** Grant the app permission to access your device's microphone.
+3. **Analyzing Voice:** Speak clearly into the microphone to have your voice analyzed by the application.
+4. **Viewing Insights:** The app will display insights and analysis based on your voice input.
+
+## Known Limitations
+
+- Functionality and performance might vary across different browser versions or platforms not listed in the supported platforms section.
+- Some features may not be fully supported or optimized on non-supported browsers or platforms.
+
+## Troubleshooting
+
+If you encounter any issues while using the Voice Analyzer App, consider the following troubleshooting steps:
+
+- Ensure you're using one of the supported browsers or platforms mentioned above.
+- Check if the microphone permissions are enabled for the browser.
+- Try refreshing the application or restarting the browser if you face any unexpected behavior.
