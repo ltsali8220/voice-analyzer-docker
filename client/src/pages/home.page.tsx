@@ -1,5 +1,7 @@
+import Button from '@/components/button.component';
+import ErrorComponent from '@/components/error-message.component';
+import LanguageSelector from '@/components/language-selector.component';
 import TextTranslator from '@/components/text-translator.component';
-import { LANGUAGES } from '@/constant';
 import useSpeechRecognition from '@/hooks/useSpeechRecognition';
 import { getTranscribedHistory } from '@/services/api.serivces';
 import { useEffect, useState } from 'react';
@@ -21,8 +23,8 @@ function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetcheddata = await getTranscribedHistory();
-      setData(fetcheddata);
+      const fetchedData = await getTranscribedHistory();
+      setData(fetchedData);
     };
     fetchData();
   }, []);
@@ -36,48 +38,22 @@ function Home() {
     <>
       <div className='p-5'>
         {hasRecognitionSupport ? (
-          <>
+          <div>
             <div className='flex items-center justify-center gap-10'>
-              <div className='flex gap-5'>
-                <div className='flex flex-col mb-2'>
-                  <label htmlFor='' className='text-lg p-2'>
-                    {' '}
-                    Input Language{' '}
-                  </label>
-                  <select
-                    name=''
-                    id=''
-                    className='border border-5 rounded-lg p-2'
-                    onChange={(event) => onhandleChangeInput(event)}
-                  >
-                    {LANGUAGES &&
-                      LANGUAGES.map((lang) => (
-                        <option key={lang.code} value={lang.code}>
-                          {lang.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
+              <LanguageSelector
+                onLanguageChange={onhandleChangeInput}
+              />
               <div className='flex gap-5 mt-10'>
-                <div>
-                  <button
-                    className='border-2 p-2 rounded-lg bg-blue-400 hover:bg-blue-500 hover:text-white'
-                    onClick={startListening}
-                  >
-                    {' '}
-                    Start Recording{' '}
-                  </button>
-                </div>
-                <div>
-                  <button
-                    className='border-2 p-2 rounded-lg bg-red-400 hover:bg-red-500 hover:text-white'
-                    onClick={stopListening}
-                  >
-                    {' '}
-                    Stop Recording{' '}
-                  </button>
-                </div>
+                <Button 
+                  title = "Start Recording"
+                  onClick = {startListening}
+                  color = "blue"
+                />
+                <Button 
+                  title = "Stop Recording"
+                  onClick = {stopListening}
+                  color = "red"
+                />
               </div>
             </div>
             {isListening && (
@@ -92,9 +68,11 @@ function Home() {
               data={data}
               setData={setData}
             />
-          </>
+          </div>
         ) : (
-          <h1>Your browser has no speech recognition</h1>
+          <ErrorComponent>
+            <h1>Your browser has no speech recognition</h1>
+          </ErrorComponent>
         )}
       </div>
     </>

@@ -1,4 +1,4 @@
-import { DataItem } from '@/types';
+import { DataItem } from '@/types/models';
 import ApiService from '@services/http-common';
 
 export async function saveTranscribeData(data: DataItem) {

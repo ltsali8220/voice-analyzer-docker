@@ -1,6 +1,8 @@
-import { DataItem } from '@/types';
+import { DefaultColumnsName as columns } from '@/constant';
+import { DataItem, HistoryTableProps } from '@/types/models';
+import TableRow from './table-row.component';
 
-const HistoryTable = ({ data }: any) => {
+const HistoryTable: React.FC<HistoryTableProps> = ({ data }) => {
   return (
     <div>
       <div className='relative overflow-x-auto shadow-md sm:rounded-lg m-10'>
@@ -11,49 +13,18 @@ const HistoryTable = ({ data }: any) => {
         <table className='w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400'>
           <thead className='text-xs border-solid border-2 text-gray-700 uppercase dark:text-gray-400'>
             <tr>
-              <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
-                Sn.No.
-              </th>
-              <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg text-clip'>
-                Input Text
-              </th>
-              <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
-                Translated Text
-              </th>
-              <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
-                Most Frequently Used Words
-              </th>
-              <th scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
-                Unique Words
-              </th>
+              {columns.map((columnName: string, index:number) => (
+                  <th key={index} scope='col' className='px-6 py-3 text-center bg-gray-700 text-white text-lg'>
+                    {columnName}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
           <tbody>
-            {data?.map((item: DataItem, index: number) => {
-              return (
-                <tr className='odd:bg-white even:bg-white  border-b '>
-                  <th
-                    scope='row'
-                    className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-center text-sm'
-                  >
-                    {index + 1}
-                  </th>
-                  <th
-                    scope='row'
-                    className='px-6 py-4 font-medium text-gray-900 text-center text-sm'
-                  >
-                    {item.inputText}
-                  </th>
-                  <td className='px-6 py-4 text-gray-600 text-center text-sm'>{item.outputText}</td>
-                  <td className='px-6 py-4 text-gray-600 text-center text-sm'>
-                    {item.mostFrequentlyUsedWord}
-                  </td>
-                  <td className='px-6 py-4 text-gray-600 text-center text-sm'>
-                    {item.uniqueWords.join(', ')}
-                  </td>
-                </tr>
-              );
-            })}
+            {data?.map((item: DataItem, index: number) => (
+              <TableRow key={index} item={item} index={index} />
+            ))}
           </tbody>
         </table>
       </div>

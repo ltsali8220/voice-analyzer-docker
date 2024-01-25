@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import HistoryTable from './history-table.component';
 import { getFrequencyWord, getTop3UniquePhrases } from '@/utils';
 import { saveTranscribeData } from '@/services/api.serivces';
+import TextArea from './text-area.component';
+import { TextTranslatorProps } from '@/types/models';
 
-const TextTranslator = ({ inputLanguage, inputText, data, setData }: any) => {
+const TextTranslator : React.FC<TextTranslatorProps> = ({ inputLanguage, inputText, data, setData }) => {
 
   const [loader, setLoader] = useState<boolean>(false);
   const [outputText, setoutputText] = useState<string>('');
   const uniquePhrase = getTop3UniquePhrases(outputText);
   const frequencyWord = getFrequencyWord(outputText);
-  console.log(inputText);
 
   useEffect(() => {
     function TranslatedText() {
@@ -42,7 +43,7 @@ const TextTranslator = ({ inputLanguage, inputText, data, setData }: any) => {
     TranslatedText();
   }, [inputText]);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoader(true);
     try {
@@ -63,20 +64,14 @@ const TextTranslator = ({ inputLanguage, inputText, data, setData }: any) => {
   return (
     <div className='mt-10'>
       <div className='flex gap-10 p-10'>
-        <div className='border-2 w-1/2 h-60 overflow-auto rounded-lg text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500'>
-          <h1 className='font-bold pl-2 mt-2 border-2 border-solid bg-gray-200 p-2 w-[100px] ml-2 rounded-lg'>
-            {' '}
-            Input Text{' '}
-          </h1>
-          <div className='p-5 rounded-lg '> {inputText}</div>
-        </div>
-        <div className='border-2 w-1/2 h-60 overflow-auto rounded-lg text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500'>
-          <h1 className='font-bold pl-2 mt-2 border-2 border-solid bg-gray-200 p-2 w-[120px] ml-2 rounded-lg'>
-            {' '}
-            Translated Text{' '}
-          </h1>
-          <div className='p-5'>{outputText}</div>
-        </div>
+        <TextArea 
+          title = "Input Text"
+          children = {inputText}
+        />
+        <TextArea 
+          title = "Translated Text"
+          children = {outputText}
+        />
       </div>
       <div className='flex items-center justify-center m-2'>
         <button
@@ -87,13 +82,10 @@ const TextTranslator = ({ inputLanguage, inputText, data, setData }: any) => {
         </button>
       </div>
       {data && (
-        <>
           <div>
             <HistoryTable data={data} />
           </div>
-        </>
       )}
-      <div></div>
     </div>
   );
 };
