@@ -1,118 +1,118 @@
-﻿# Voice Analyzer App
+﻿🗣️ Voice Analyzer (Dockerized Full-Stack App)
 
-Voice Analyzer is designed to take audio input from the user, and translate it into English if the user has not spoken in English. Additionally, it includes features to identify frequently used words and unique phrases.
+A full-stack Voice/Text Analyzer application built with:
 
-### Frontend
-- **Framework**: React.js ( Vite as the build tool )
-- **Language**: JavaScript/TypeScript
-- **Speech Recognition API**: Web Speech API
-- **API Integration**: Axios or Fetch
+Frontend: React + TypeScript + Vite
 
-### Backend
-- **Framework**: Node.js with Express
-- **Language**: JavaScript
-- **API Integration**: Google Translation API
-- **Database**: MongoDB 
-- **Deployment**: Vercel
+Backend: Node.js + Express + Mongoose
 
-## Installation
+Database: MongoDB (via Docker)
 
-### Frontend (Vite React.js)
+Reverse Proxy: Nginx with SSL
 
-#### Prerequisites
-- Node.js (>=14.x)
-- npm 
+Containerized: Docker Compose
 
-#### Steps
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/voice-analyzer.git
-2. Navigate to the Client Directory
-    ```bash
-    cd voice-analyzer/client
-3. Install the dependencies
-    ```bash
-    npm install
-4. Start the development server
-    ```bash
-    npm run dev
------------------------------------
-### Backend (Node.js)
+🚀 Features
 
-#### Prerequisites
-- Node.js (>=14.x)
-- npm 
+🎤 Record and analyze text
 
-#### Steps
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/voice-analyzer.git
-2. Navigate to the backend directory:
-    ```bash
-    cd voice-analyzer/server
-3. Install the dependencies
-    ```bash
-    npm install
-4. Start the backend server
-    ```bash
-    npm start
-## Usage
+📊 View past analyses stored in MongoDB
 
-### Getting Started
+🔁 Full client–server communication via Nginx
 
-1. **Accessing the Application:**
-   - After installation and running the frontend and backend servers, access the application in your web browser.
+🐳 Easy Docker deployment
 
-2. **Recording and Translating Speech:**
-   - Click on the "Record" button or speak into the microphone to provide audio input.
-   - The application will transcribe the speech and, if necessary, translate it into English.
+🔒 HTTPS support with SSL
 
-### Features
+📂 Repository Structure
+voice-analyzer-docker/
+│
+├── client/               # React frontend
+│   ├── src/              # Components, hooks, pages
+│   ├── Dockerfile
+│   └── ...
+│
+├── server/               # Node.js backend
+│   ├── models/
+│   │   └── TranscribedModel.js
+│   ├── server.js
+│   ├── Dockerfile
+│   └── .env.example
+│
+├── nginx/                # Reverse proxy + SSL
+│   ├── nginx.conf
+│   └── certs/
+│       ├── server.crt
+│       ├── server.key
+│
+├── docker-compose.yml
+└── README.md
 
-1. **Language Detection and Translation:**
-   - The application detects the language spoken by the user based on user input.
-   - If the spoken language is not English, the application translates the speech into English for user understanding.
+⚙️ Prerequisites
 
-2. **Identifying Frequently Used Words:**
-   - The application analyzes transcribed text to identify frequently used words.
-   - View a list of the most commonly used words for a given speech input.
+Docker Desktop
 
-3. **Identifying Unique Phrases:**
-   - Analyzes the speech input to identify unique phrases or sentences spoken by the user.
-   - Displays a list of the top 3 unique phrases detected.
+Optional: Local MongoDB if not using the Dockerized database
 
-## Supported Platforms
+🧩 Environment Variables
+/server/.env
+PORT=5000
+MONGO_URI=mongodb://mongo:27017/voiceanalyzer
 
-The Voice Analyzer App is compatible with the following web browsers and platforms:
 
-### Desktop Browsers:
-- Google Chrome
-- Microsoft Edge
-- Opera
+If using local MongoDB instead of the container:
 
-### Mobile Browsers:
-- Safari (iOS)
-- Chrome (Android)
-- Opera (Android)
-- Samsung Internet
-- WebView (Android)
+MONGO_URI=mongodb://host.docker.internal:27017/voiceanalyzer
 
-## Usage Instructions
+🐳 Running with Docker
+1️⃣ Build and start all containers
+docker-compose up -d --build
 
-1. **Accessing the App:** Make sure you're using one of the supported browsers mentioned above.
-2. **Recording Voice:** Grant the app permission to access your device's microphone.
-3. **Analyzing Voice:** Speak clearly into the microphone to have your voice analyzed by the application.
-4. **Viewing Insights:** The app will display insights and analysis based on your voice input.
 
-## Known Limitations
+This starts:
 
-- Functionality and performance might vary across different browser versions or platforms not listed in the supported platforms section.
-- Some features may not be fully supported or optimized on non-supported browsers or platforms.
+voice_frontend → React app
 
-## Troubleshooting
+voice_backend → Express server
 
-If you encounter any issues while using the Voice Analyzer App, consider the following troubleshooting steps:
+voice_db → MongoDB instance
 
-- Ensure you're using one of the supported browsers or platforms mentioned above.
-- Check if the microphone permissions are enabled for the browser.
-- Try refreshing the application or restarting the browser if you face any unexpected behavior.
+voice_proxy → Nginx HTTPS proxy
+
+2️⃣ Access the app
+
+Frontend: https://localhost
+ (via Nginx HTTPS)
+
+Backend API (direct): http://localhost:5000
+
+MongoDB: localhost:27017
+
+3️⃣ Stop the app
+docker-compose down
+
+
+Remove data volumes as well:
+
+docker-compose down -v
+
+🧠 Troubleshooting
+Issue	Cause	Fix
+MongooseError: uri must be a string	Wrong env var name	Ensure backend uses MONGO_URI and Docker sets it correctly
+Containers restart repeatedly	Build error or missing env	Run docker logs voice_backend to debug
+Nginx "server directive not allowed here"	Wrong placement in nginx.conf	Ensure server {} is inside http {} block
+🧪 Development Notes
+
+Rebuild container to see code changes:
+
+docker-compose build backend
+docker-compose up -d
+
+
+Connect directly to MongoDB:
+
+docker exec -it voice_db mongosh
+
+📜 License
+
+MIT License
