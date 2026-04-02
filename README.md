@@ -1,36 +1,38 @@
-﻿# Voice Analyzer (Dockerized Full-Stack App)
+# Athina
 
-A full-stack Voice/Text Analyzer — record or paste audio/text, transcribe or analyze it, and store the results for later inspection. The project is containerized with Docker Compose and served behind an Nginx reverse proxy with HTTPS.
+A full-stack voice and text analyzer — record or paste audio/text, transcribe or analyze it, and store the results for later inspection. Named after Athina, daughter of Zeus.
+
+Developed by **ltsali8220**.
 
 ## Tech stack
-- Frontend: React + TypeScript + Vite  
-- Backend: Node.js + Express + Mongoose  
-- Database: MongoDB (Docker)  
-- Reverse proxy: Nginx (with SSL)  
+- Frontend: React + TypeScript + Vite
+- Backend: Django + Django REST Framework
+- Database: PostgreSQL (Docker)
+- Reverse proxy: Nginx (with SSL)
 - Orchestration: Docker Compose
 
 ## Features
 - Record or submit text/audio for analysis
-- Persisted analyses stored in MongoDB
+- Persisted analyses stored in PostgreSQL
 - Client ↔ server traffic routed through Nginx
 - Fully containerized for easy deployment
 - HTTPS support via SSL certificates
 
 ## Repository structure
 ```
-voice-analyzer-docker/
+athina/
 │
 ├── client/               # React frontend
 │   ├── src/              # Components, hooks, pages
 │   ├── Dockerfile
 │   └── ...
 │
-├── server/               # Node.js backend
-│   ├── models/
-│   │   └── TranscribedModel.js
-│   ├── server.js
-│   ├── Dockerfile
-│   └── .env.example
+├── backend/              # Django backend
+│   ├── voice_analyzer/   # Django project settings
+│   ├── transcriptions/   # App: models, views, serializers
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── Dockerfile
 │
 ├── nginx/                # Reverse proxy + SSL
 │   ├── nginx.conf
@@ -42,94 +44,48 @@ voice-analyzer-docker/
 └── README.md
 ```
 
-## Prerequisites
-- Docker Desktop (or Docker Engine + Docker Compose)
-- Optional: a local MongoDB instance if you prefer not to use the Dockerized database
-
-## Environment variables
-
-Example server .env (server/.env)
-```
-PORT=5000
-MONGO_URI=mongodb://mongo:27017/voiceanalyzer
-```
-
-If you want the backend to connect to a MongoDB running on your host machine instead of the container, use:
-```
-MONGO_URI=mongodb://host.docker.internal:27017/voiceanalyzer
-```
-
-Confirm your server code reads MONGO_URI (case-sensitive) from process.env.
-
 ## Running with Docker
 
-1. Build and start all services
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
-This will start the composed services (example service names):
-- voice_frontend → React app
-- voice_backend  → Express server
-- voice_db       → MongoDB
-- voice_proxy    → Nginx HTTPS proxy
+This starts:
+- `athina_frontend` — React app (internal only, served via Nginx)
+- `athina_backend`  — Django REST API (internal only, served via Nginx)
+- `athina_db`       — PostgreSQL database (internal only)
+- `athina_proxy`    — Nginx HTTPS reverse proxy
 
-2. Access the app
-- Frontend: https://localhost (served via Nginx HTTPS)
-- Backend API (direct): http://localhost:5000 (useful for debug if backend is exposed)
-- MongoDB: localhost:27017
+## Access the app
+- **App:** https://localhost (HTTPS via Nginx)
+- **HTTP redirect:** http://localhost:8080 → redirects to HTTPS
 
-3. Stop the application
+## Stop the application
 ```bash
-docker-compose down
+docker compose down
 ```
 
-Remove named volumes and data:
+Remove data volumes:
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
 
-### Rebuilding specific services during development
-Rebuild/refresh a single service after code changes:
+## Debugging
+
 ```bash
-# Rebuild backend (service name in compose: voice_backend)
-docker-compose build voice_backend
-docker-compose up -d voice_backend
+# View logs
+docker compose logs -f
 
-# Rebuild frontend (service name in compose: voice_frontend)
-docker-compose build voice_frontend
-docker-compose up -d voice_frontend
-```
+# Shell into backend
+docker exec -it athina_backend /bin/sh
 
-## Debugging & troubleshooting
-
-| Issue | Possible cause | Fix |
-|---|---:|---|
-| MongooseError: uri must be a string | Wrong env var name / undefined MONGO_URI | Ensure server reads process.env.MONGO_URI and Docker Compose sets it correctly |
-| Containers restart repeatedly | Build error or runtime exception | Run `docker logs <container>` (e.g. `docker logs voice_backend`) and inspect stack trace |
-| Nginx "server directive not allowed here" | Misplaced `server {}` block in nginx.conf | Ensure `server {}` blocks are inside an `http {}` block in nginx.conf |
-| Can't connect to MongoDB from host | Using container hostnames from host machine | Use `localhost:27017` or `host.docker.internal:27017` depending on your platform / compose networking |
-
-Common helpful commands:
-```bash
-# View container logs
-docker-compose logs -f
-
-# Open a shell in the backend container
-docker exec -it voice_backend /bin/sh
-
-# Connect to MongoDB shell inside the container
-docker exec -it voice_db mongosh
+# Shell into database
+docker exec -it athina_db psql -U postgres -d athina
 ```
 
 ## SSL / Certificates
-- The `nginx/certs/` directory contains the server certificate and key used by Nginx.
-- For local development you may use self-signed certificates (your browser will warn you).
-- In production, replace those certs with ones from a trusted CA (e.g., Let's Encrypt) and update nginx.conf accordingly.
-
-## Development notes
-- Ensure you restart/rebuild containers when changing Dockerfile content or container-level environment.
-- For live frontend development, consider running the React dev server locally (outside Docker) and pointing API calls to the backend (or configure a dev-only proxy).
+The `nginx/certs/` directory contains self-signed certificates for local development.
+In production, replace with certs from a trusted CA (e.g., Let's Encrypt).
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+MIT License

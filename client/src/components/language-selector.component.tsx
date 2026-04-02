@@ -10,8 +10,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onLanguageChange })
     <div className='flex gap-5'>
       <div className='flex flex-col mb-2'>
         <label htmlFor='language-select' className='text-lg p-2'>
-          {' '}
-          Input Language{' '}
+          I will speak in:
         </label>
         <select
           id='language-select'

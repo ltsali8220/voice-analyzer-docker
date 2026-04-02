@@ -10,3 +10,8 @@ export async function getTranscribedHistory() {
   const response = await ApiService.get('/store-text');
   return response.data;
 }
+
+export async function deleteTranscribeData(id: number) {
+  const response = await ApiService.delete(`/store-text/${id}`);
+  return response.data;
+}

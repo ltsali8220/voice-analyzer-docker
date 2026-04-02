@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
@@ -10,38 +10,45 @@ declare global {
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 const useSpeechRecognition = () => {
-  const [language, setlanguage] = useState('');
-
-  const recognitionInstance = new SpeechRecognition();
-  recognitionInstance.continuous = true;
-  recognitionInstance.lang = language;
-  recognitionInstance.interimResults = false;
-  recognitionInstance.maxAlternatives = 1;
-
+  const [language, setlanguage] = useState('en-US');
   const [text, setText] = useState('');
   const [isListening, setisListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  if (!recognitionInstance) {
-    return;
-  }
+  useEffect(() => {
+    if (!SpeechRecognition) return;
 
-  recognitionInstance.onresult = async (event: SpeechRecognitionEvent) => {
-    setText(event.results[0][0].transcript);
-  };
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.lang = language;
 
-  recognitionInstance.onerror = (event: Event) => {
-    console.error('Speech recognition error:', (event as SpeechRecognitionErrorEvent).error);
-  };
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      setText(event.results[event.results.length - 1][0].transcript);
+    };
+
+    recognition.onerror = (event: Event) => {
+      console.error('Speech error:', (event as SpeechRecognitionErrorEvent).error);
+      setisListening(false);
+    };
+
+    recognition.onend = () => setisListening(false);
+
+    recognitionRef.current = recognition;
+  }, [language]);
 
   const startListening = () => {
+    if (!recognitionRef.current) return;
     setText('');
     setisListening(true);
-    recognitionInstance.start();
+    recognitionRef.current.start();
   };
 
   const stopListening = () => {
+    if (!recognitionRef.current) return;
     setisListening(false);
-    recognitionInstance.stop();
+    recognitionRef.current.stop();
   };
 
   return {
@@ -50,9 +57,8 @@ const useSpeechRecognition = () => {
     text,
     isListening,
     startListening,
-    setisListening,
     stopListening,
-    hasRecognitionSupport: !!recognitionInstance,
+    hasRecognitionSupport: !!SpeechRecognition,
   };
 };
 
